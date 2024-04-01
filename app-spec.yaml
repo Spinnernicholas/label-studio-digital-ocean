@@ -1,0 +1,56 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+databases:
+- engine: PG
+  name: db-label-studio
+  version: "12"
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: heartexlabs-label-studio
+    match:
+      path:
+        prefix: /
+name: label-studio
+region: sfo
+services:
+- envs:
+  - key: LABEL_STUDIO_DISABLE_SIGNUP_WITHOUT_LINK
+    scope: RUN_AND_BUILD_TIME
+    value: "true"
+  - key: LABEL_STUDIO_USERNAME
+    scope: RUN_AND_BUILD_TIME
+    value: youremail@example.com
+  - key: LABEL_STUDIO_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: yourpassword
+  - key: DJANGO_DB
+    scope: RUN_AND_BUILD_TIME
+    value: default
+  - key: POSTGRE_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: ${db-label-studio.DATABASE}
+  - key: POSTGRE_USER
+    scope: RUN_AND_BUILD_TIME
+    value: ${db-label-studio.USERNAME}
+  - key: POSTGRE_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: ${db-label-studio.PASSWORD}
+  - key: POSTGRE_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: ${db-label-studio.PORT}
+  - key: POSTGRE_HOST
+    scope: RUN_AND_BUILD_TIME
+    value: ${db-label-studio.HOSTNAME}
+  http_port: 8080
+  image:
+    registry: heartexlabs
+    registry_type: DOCKER_HUB
+    repository: label-studio
+    tag: latest
+  instance_count: 1
+  instance_size_slug: basic-xs
+  name: heartexlabs-label-studio
